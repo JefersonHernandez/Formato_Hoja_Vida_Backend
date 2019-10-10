@@ -5,8 +5,8 @@ import psycopg2
 class Sistema(object):
     """doc"""
 
-    def guardadCorrespondencia(self, datos):
-        sql = "INSERT INTO CORRESPONDENCIA (id_correspondencia, direccion, email) VALUES (%s,%s,%s)"
+    def guardarInfoCorrespondencia(self, datos):
+        sql = "INSERT INTO CORRESPONDENCIA (codigo_persona, direccion, email, telefono,codigo_pais,codigo_departamento,codigo_municipio) VALUES (%s,%s,%s,%s,%s,%s,%s)"
         return Conexion.sqlExecute(sql, datos)
 
     def getPersona(self, documento):

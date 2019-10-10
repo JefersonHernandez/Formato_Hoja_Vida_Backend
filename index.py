@@ -1,5 +1,5 @@
 from typing import re
-
+from Conexion import Conexion
 from flask import Flask
 from flask import render_template, redirect, request, url_for, jsonify
 
@@ -69,6 +69,16 @@ def obtenerDepartamentos():
     sistema = Sistema()
     return jsonify(sistema.obtenerDepartamentos(content['select-pais-nacimiento']))
 
+@app.route('/obtenerDepartamentosCorrespondencia', methods=['GET','POST'])
+def obtenerDepartamentosCorrespondencia():
+    print('===>')
+    print('==========>')
+    print('=======================>')
+    content = request.values
+    print(content)
+    sistema = Sistema()
+    return jsonify(sistema.obtenerDepartamentos(content['select-pais-correspondencia']))
+
 @app.route('/obtenerMunicipios', methods=['GET','POST'])
 def obtenerMunicipios():
     print('==========================')
@@ -78,15 +88,34 @@ def obtenerMunicipios():
     sistema = Sistema()
     return jsonify(sistema.obtenerMunicipios(content['select-departamento-nacimiento']))
 
+@app.route('/obtenerMunicipiosCorrespondencia', methods=['GET','POST'])
+def obtenerMunicipiosCorrespondencia():
+    content = request.values
+    print(content)
+    sistema = Sistema()
+    return jsonify(sistema.obtenerMunicipios(content['select-departamento-correspondencia']))
+    #return jsonify(Conexion.sqlGetData('SELECT MUNICIPIO.nombre, MUNICIPIO.codigo_municipio FROM MUNICIPIO WHERE MUNICIPIO.codigo_departamento ='+"'54'"))
+
 @app.route('/info_nacimiento', methods=['GET','POST'])
 def guardarInfoNacimiento():
     content = request.values
     print(content)
-    print('DOCUMENTO_PRUEBA' +'2')
+    print('DOCUMENTO_PRUEBA1212' +'2')
     info_persona =('2',content['select-pais-nacimiento'],content['select-departamento-nacimiento'],content['select-municipio-nacimiento'],content['fecha_nacimiento'])
     sistema = Sistema()
     return str(sistema.guardarInfoNacimiento(info_persona))
 
+@app.route('/info_correspondencia', methods=['GET','POST'])
+def guardarInfoCorrespondencia():
+    content = request.values
+    #print('DOCUMENTO_PRUEBA111' +'2')
+    print(content)
+    #print('DOCUMENTO_PRUEBA' +'2')
+    info_persona =('2',content['direccion-correspondencia'],content['email-correspondencia'],content['telefono-correspondencia'],content['select-pais-correspondencia'],content['select-departamento-correspondencia'],content['select-municipio-correspondencia'])
+    #info_persona =('2',content['select-pais-nacimiento'],content['select-departamento-nacimiento'],content['select-municipio-nacimiento'],content['fecha_nacimiento'])
+    sistema = Sistema()
+    return str(sistema.guardarInfoCorrespondencia(info_persona))
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=port, debug=True)
-    #app.run()
+    #app.run(host='0.0.0.0', port=port, debug=True)
+    app.run()
