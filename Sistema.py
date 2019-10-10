@@ -9,17 +9,6 @@ class Sistema(object):
         sql = "INSERT INTO CORRESPONDENCIA (id_correspondencia, direccion, email) VALUES (%s,%s,%s)"
         return Conexion.sqlExecute(sql, datos)
 
-    def guardarPais(self,datos):
-        sql = "INSERT INTO PAIS (codigo, nombre) VALUES (%s, %s)"
-        aux = Conexion.sqlExecute(sql, datos)
-        print('aux content => ', aux)
-
-    def guardarPersona(self, datos):
-        sql = "INSERT INTO PERSONA (nombre, primer_apellido, segundo_apellido, fecha_nacimiento, " \
-              "documento, id_tipo_doc, id_pais, id_correspondenc, id_edu_basica, habilitado) " \
-              "VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-        Conexion.sqlExecute(sql, datos)
-
     def getPersona(self, documento):
         sql = "SELECT * FROM PERSONA WHERE DOCUMENTO = " + documento
         datos = Conexion.sqlGetData(sql)
@@ -28,12 +17,6 @@ class Sistema(object):
     def login(self, documento, clave):
         sql = "SELECT clave FROM PERSONA WHERE documento = " + documento
         return Conexion.sqlGetData(sql)
-
-    def guardarDatosPersonales(self, datos):
-        sql = "INSERT INTO PERSONA (nombre, primer_apellido, segundo_apellido, fecha_nacimiento, " \
-              "documento, id_tipo_doc, id_pais,id_edu_basica, habilitado, clave) " \
-              "VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-        return Conexion.sqlExecute(sql, datos)
 
     def obtenerPaises(self):
         sql = "SELECT PAIS.nombre, PAIS.codigo FROM PAIS"
@@ -54,3 +37,15 @@ class Sistema(object):
     def obtenerDistritosMilitares(self):
         sql = "SELECT DISTRITO_MILITAR.nombre FROM DISTRITO_MILITAR"
         return Conexion.sqlGetData(sql)
+
+    def obtenerDepartamentos(self, codigo_pais):
+        sql = "SELECT DEPARTAMENTO.nombre, DEPARTAMENTO.codigo_departamento FROM DEPARTAMENTO WHERE DEPARTAMENTO.codigo_pais =  '"+codigo_pais+"'"
+        return Conexion.sqlGetData(sql)
+
+    def obtenerMunicipios(self, codigo_departamento):
+        sql = "SELECT MUNICIPIO.nombre, MUNICIPIO.codigo_municipio FROM MUNICIPIO WHERE MUNICIPIO.codigo_departamento =  '"+codigo_departamento+"'"
+        return Conexion.sqlGetData(sql)
+
+    def guardarInfoNacimiento(self,datos):
+        sql = "INSERT INTO LUGAR_NACIMIENTO (documento_persona, codigo_pais, codigo_departamento, codigo_municipio, fecha_nacimiento) VALUES(%s,%s,%s,%s,%s)"
+        return Conexion.sqlExecute(sql, datos)
