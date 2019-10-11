@@ -111,7 +111,7 @@ def guardarInfoCorrespondencia():
     #print('DOCUMENTO_PRUEBA111' +'2')
     print(content)
     #print('DOCUMENTO_PRUEBA' +'2')
-    info_persona =('2',content['direccion-correspondencia'],content['email-correspondencia'],content['telefono-correspondencia'],content['select-pais-correspondencia'],content['select-departamento-correspondencia'],content['select-municipio-correspondencia'])
+    info_persona =('7',content['direccion-correspondencia'],content['email-correspondencia'],content['telefono-correspondencia'],content['select-pais-correspondencia'],content['select-departamento-correspondencia'],content['select-municipio-correspondencia'])
     #info_persona =('2',content['select-pais-nacimiento'],content['select-departamento-nacimiento'],content['select-municipio-nacimiento'],content['fecha_nacimiento'])
     sistema = Sistema()
     return str(sistema.guardarInfoCorrespondencia(info_persona))
