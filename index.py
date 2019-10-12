@@ -7,7 +7,7 @@ from Sistema import Sistema
 from flask_cors import CORS
 app = Flask(__name__)
 cors = CORS(app)
-@app.route('/login', methods=['GET', 'POST'])
+"""@app.route('/login', methods=['GET', 'POST'])
 def login():
     sistema = Sistema()
     content = request.values
@@ -16,7 +16,7 @@ def login():
         return 'usuario valido'
     else:
         return 'usuario o contraseña invalido'
-
+"""
 @app.route('/obtenerPaises', methods=['GET','POST'])
 def obtenerPaises():
     sistema = Sistema()
@@ -116,6 +116,16 @@ def guardarInfoCorrespondencia():
     sistema = Sistema()
     return str(sistema.guardarInfoCorrespondencia(info_persona))
 
+###################TEST#############################
+@app.route('/login',methods = ['GET', 'POST'])
+def login():
+    content = request.values
+    clave_prueba = '0000'
+    if content['clave'] == clave_prueba:
+        return 'usuario existe'
+    else:
+        return 'usuario no existe'
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=port, debug=True)
-    #app.run()
+    #app.run(host='0.0.0.0', port=port, debug=True)
+    app.run()
