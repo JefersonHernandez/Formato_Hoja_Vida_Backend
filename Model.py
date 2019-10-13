@@ -1,9 +1,8 @@
 import datetime
-#from Conexion import Conexion
 import psycopg2
 class Persona(object):
 
-    def __init__(self, nombre, primer_apellido, segundo_apellido, fecha_nacimiento, habilitado, 
+    def __init__(self, nombre, primer_apellido, segundo_apellido, fecha_nacimiento, habilitado,
         documento, id_tipo_doc, id_pais, id_correspondenc, id_edu_basica):
         self.nombre = nombre
         self.primerApellido = primer_apellido
@@ -16,7 +15,7 @@ class Persona(object):
         self.correspondencia = id_correspondenc
         self.educacionBasica = id_edu_basica
 
-        
+
 
 class PersonaDao(object):
 
@@ -28,9 +27,9 @@ class PersonaDao(object):
         cur = Conexion.abrirConexion()
         #2 cedula
         #sql script
-        sql = """INSERT INTO PERSONA (nombre, primer_apellido, segundo_apellido, fecha_nacimiento, habilitado, 
+        sql = """INSERT INTO PERSONA (nombre, primer_apellido, segundo_apellido, fecha_nacimiento, habilitado,
         documento, id_tipo_doc, id_pais, id_correspondenc, id_edu_basica) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,)"""
-        
+
         datos = (persona.nombre, persona.primerApellido, persona.segundoApellido, persona.fechaNacimiento,
         persona.esHabil, persona.documento, persona.tipoDocumento, persona.pais, persona.correspondencia,
         persona.educacionBasica)
@@ -41,29 +40,14 @@ class PersonaDao(object):
             print(error)
         finally:
             Conexion.cerrarConexion()
-        #save
+        #sav
+class usuario_estatico(object):
+    """docstring for usuario_estatico."""
+    usuario = 'None'
+    
+    @staticmethod
+    def getUser():
+        usuario_estatico.usuario
 
-"""
-
-#joe = Persona("joe",datetime.datetime(1996,2,27),False)
-#a = PersonaDao()
-#a.saveData(joe)
-#print(joe.nombre)
-#print(joe.fechaNacimiento)
-#print(joe.esHabil)
-#print(joe.__dict__)
-tester = Conexion.abrirConexion()
-tester.execute("select * from pais  where id_pais = "+str(301))
-#tester = Conexion.conexion.cur.execute("select * from pais  where id_pais = "+str(301))
-#cur.execute( "SELECT * FROM persona" )
-print(tester.fetchone())
-#Conexion.conectar()
-#print(cur)
-Conexion.cerrarConexion()
-
-joe = Persona("joe", "apellido", "brown", datetime.datetime(1996,2,27), True, 
-        "1094349752", 2, 1, 1, 1)
-#joe = Persona()
-obj = PersonaDao()
-obj.saveData(joe)
-"""
+    def setUser(user):
+        usuario_estatico.usuario=user

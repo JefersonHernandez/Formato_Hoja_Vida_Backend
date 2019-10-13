@@ -41,8 +41,10 @@ class Conexion:
         try:
             cur = Conexion.abrirConexion()
             cur.execute(sql, datos)
+            print(datos)
             estado=Conexion.commit()
-            #print(estado+'====')
+            print(estado)
+            print('##@##')
             return 'Guardado.'
         except psycopg2.errors.ForeignKeyViolation as e:
             print('ForeignKeyViolation')
