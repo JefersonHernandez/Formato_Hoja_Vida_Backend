@@ -12,8 +12,10 @@ def usuarioExiste(usuario):
     """retorna True si el usuario existe en la base de datos"""
     respuesta = db.login(usuario)
     if respuesta:
+        print('si existe')
         return True
     else:
+        'no existe'
         return False
 
 def esUsuarioValido(usuario,clave):
@@ -34,7 +36,8 @@ def isUserValid(usuario,clave):
             return False
     else:
         print('usuario invalido en isUserValid')
-
+        return 'false'
+"""
 def validarUsuario(usuario,clave):
     respuesta = db.login(usuario)
     if respuesta:
@@ -54,7 +57,7 @@ def validarUsuario(usuario,clave):
 def login():
     content = request.values
     return validarUsuario(content['documento'],content['clave'])
-
+"""
 
 @app.route('/obtenerPaises', methods=['GET','POST'])
 def obtenerPaises():
@@ -130,20 +133,56 @@ def informacionPersonal():
        datosNacionaldiad = (content['nacionalidad-pais'], usuario_sesion)
        datosNacimiento = (content['fecha_nacimiento'],content['select-pais-nacimiento'],content['select-departamento-nacimiento'],content['select-municipio-nacimiento'],usuario_sesion)
        datosCorrespondencia = (content['direccion-correspondencia'],content['select-pais-correspondencia'],content['select-departamento-correspondencia'],content['select-municipio-correspondencia'],content['telefono-correspondencia'],content['email-correspondencia'],usuario_sesion)
+       print(usuario_sesion)
+       print(content['documento'])
+
+       db.guardarInfoPersona(datosPersona,usuario_sesion)
+       print('paso')
        db.guardarInformacion(datosPersona, datosLibreta, datosNacionaldiad, datosNacimiento, datosCorrespondencia,usuario_sesion)
-       return 'operacion terminada con exito'
+       return 'true'
    else:
-       return 'no has iniciado sesion correctamente'
+       return 'false'
 
 @app.route('/login_por_json',methods=['GET','POST'])
 def login_por_json():
     content = request.values
     if usuarioExiste(content['documento']):
+        print('se paso')
         if esUsuarioValido(content['documento'],content['clave']):
             return 'true'
+        else:
+            return 'false'
     else:
-        return 'usuario no existe'
+        print('user no existe 2')
+        return 'false'
+
+@app.route('/crear_cuenta',methods=['GET','POST'])
+def crearCuenta():
+    content = request.values
+    if usuarioExiste(content['documento']):
+        return 'false'
+    else:
+        db.crearCuenta((content['documento'],content['clave']))
+    return 'true'
+@app.route('/carga_datos_personales',methods=['GET','POST'])
+def cargaDatosPersonales():
+    content = request.values
+    if esUsuarioValido(content['documento'],content['clave']):
+        db_respuesta = db.cargaDatosPersonales(content['documento'])
+        db_respuesta = db_respuesta[0]
+        my_json = {
+        'nombre' : db_respuesta[0],
+        'primer_apellido' : db_respuesta[1],
+        'segundo_apellido' : db_respuesta[2],
+        'documento' : db_respuesta[3],
+        'codigo_tipo_documento' : db_respuesta[4],
+        'sexo' : db_respuesta[5]
+        }
+        return my_json
+    else:
+        return 'false'
+
 
 if __name__ == '__main__':
-    #app.run(host='0.0.0.0', port=port, debug=True)
-    app.run()
+    app.run(host='0.0.0.0', port=5000, debug=True)
+    #app.run()

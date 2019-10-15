@@ -59,10 +59,21 @@ class Sistema(object):
 
     def guardarInformacion(self, datosPersona, datosLibreta,datosNacionaldiad,datosNacimiento,datosCorrespondencia,documento):
         print('###')
-        self.guardarInfoPersona(datosPersona,documento)
+        #self.guardarInfoPersona(datosPersona,documento)
         #self.guardarInfoLibreta(datosLibreta)
-        print(datosNacimiento)
+        #print(datosNacimiento)
+        print(datosPersona)
         print('llego')
         self.guardarInfoNacionalidad(datosNacionaldiad)
+        print('llego 2')
         self.guardarInfoNacimiento(datosNacimiento)
+        print('llego 3')
         self.guardarInfoCorrespondencia(datosCorrespondencia)
+        print('llego 4')
+    def crearCuenta(self,datos):
+        sql = 'INSERT INTO PERSONA (documento,clave) VALUES (%s,%s)'
+        return Conexion.sqlExecute(sql,datos)
+
+    def cargaDatosPersonales(self,documento):
+        sql = "SELECT PERSONA.nombre, PERSONA.primer_apellido, PERSONA.segundo_apellido,PERSONA.documento,PERSONA.codigo_tipo_documento,PERSONA.sexo FROM PERSONA WHERE PERSONA.documento = '"+documento+"'"
+        return Conexion.sqlGetData(sql)
