@@ -33,7 +33,7 @@ class Conexion:
     def commit():
         """perform the script commit to postgres"""
         estado = Conexion.conexion.commit()
-        print(estado, '#######ESTADO')
+        #print(estado, '#######ESTADO')
         #Conexion.conexion.commit()
 
     @staticmethod
@@ -42,10 +42,10 @@ class Conexion:
         try:
             cur = Conexion.abrirConexion()
             estado1 =cur.execute(sql, datos)
-            print(estado1)
+            #print(estado1)
             estado = Conexion.commit()
-            print(estado)
-            print('##@##')
+            #print(estado)
+            #print('##@##')
             #Conexion.commit()
             return 'Guardado.'
         except psycopg2.errors.ForeignKeyViolation as e:

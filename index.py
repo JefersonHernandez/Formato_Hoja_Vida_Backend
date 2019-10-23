@@ -19,7 +19,20 @@ def usuarioExiste(usuario):
         print('Exception usuarioExiste')
     finally:
         pass
+def esUsuarioValido(usuario,clave):
+    """retorna True si las credenciales del usuario coinciden con las registradas en la base de datos"""
+    try:
+        if db.login(usuario)[0][0] == clave:
+            return True
+        else:
+            raise UsuarioInvalido('Usuario Invalido')
+            #return False
+    except Exception as e:
+        print('Exception esUsuarioValido')
+    finally:
+        pass
 
+"""
 def esUsuarioValido(usuario,clave):
     """retorna True si las credenciales del usuario coinciden con las registradas en la base de datos"""
     try:
@@ -31,6 +44,7 @@ def esUsuarioValido(usuario,clave):
         print('Exception esUsuarioValido')
     finally:
         pass
+"""
 
 @app.route('/obtenerPaises', methods=['GET','POST'])
 def obtenerPaises():
@@ -62,6 +76,11 @@ def obtenerDepartamentos():
     content = request.values
     return jsonify(db.obtenerDepartamentos(content['select-pais-nacimiento']))
 
+@app.route('/get_departamentos', methods=['GET','POST'])
+def getDepartamentos():
+    content = request.values
+    return jsonify(db.obtenerDepartamentos(content['codigo']))
+
 @app.route('/obtenerDepartamentosCorrespondencia', methods=['GET','POST'])
 def obtenerDepartamentosCorrespondencia():
     content = request.values
@@ -89,7 +108,6 @@ def guardarInfoCorrespondencia():
     info_persona =(content['documento'],content['direccion-correspondencia'],content['email-correspondencia'],content['telefono-correspondencia'],content['select-pais-correspondencia'],content['select-departamento-correspondencia'],content['select-municipio-correspondencia'])
     return str(db.guardarInfoCorrespondencia(info_persona))
 
-###GUARDA TODO LA INFORMACION DE LA PERSONA EN LA BASE DE DATOS###
 @app.route('/informacion_persona',methods=['GET','POST'])
 def informacionPersonal():
    content = request.values
@@ -110,13 +128,12 @@ def informacionPersonal():
         clave_sesion = content['c_sesion']
         if esUsuarioValido(usuario_sesion,clave_sesion):
             if content['check_libreta'] == 'true':
-                try:
-                    print(content)
                     datosLibreta = (content['numero_libreta'],content['clase_libreta'], content['distrito_militar'],usuario_sesion)
-                    res = db.guardarInfoLibreta(datosLibreta,content['numero_libreta'])
-                    print('res')
-                    #print(res)
-                    print('res')
+                try:
+                    res = db.guardarInfoLibreta(datosLibreta)
+                except UniqueViolation as e:
+                    db.actualizarInfoLibreta(datosLibreta,content['numero_libreta'])
+                    return 'true'
                 except Exception as e:
                     print(e)
                     print('error al guardar libreta')
@@ -289,7 +306,8 @@ def guardarEducacionSuperior():
         db.guardarEducacionSuperior((content['nombreEstudio'],content['selectModalidad'],content['semestresAprobados'],content['graduado'],content['fechaTerminacion'],content['numeroTarjeta'],content['d_sesion']))
         return 'true'
     except Exception as e:
-        print('Exception Carga Datos Educacion Superior '+e)
+        print('Exception Carga Datos Educacion Superior ')
+        print(e)
         return 'false'
     finally:
         pass
@@ -313,7 +331,6 @@ def obtenerEmpleos():
     try:
         if esUsuarioValido(content['documento'],content['clave']):
             empleos = db.obtenerEmpleos(content['documento'])
-            print(empleos)
             if empleos:
                 return jsonify(empleos)
             else:
@@ -335,9 +352,47 @@ def obtenerTiempoExperienciaLaboral():
 @app.route('/carga_datos_idiomas',methods=['GET','POST'])
 def obtenerIdiomas():
     try:
+        content = request.values
+        idiomas = db.obtenerIdiomas(content['documento'])
+        if idiomas:
+            return jsonify(idiomas)
+        else:
+            return 'false'
         return 'false'
     except Exception as e:
-        return 'false' 
+        print('Exception en carga_datos_idiomas')
+        return 'false'
+
+@app.route('/guardar_experiencia_laboral',methods=['GET','POST'])
+def guardarExperienciaLaboral():
+    content = request.values#documento,titulo, grado,fecha_grado
+    try:
+        print(content)
+        print(content['nombre_empresa'])
+        db.guardarExperienciaLaboral((content['nombre_empresa'],content['gubernamental'],content['pais'],content['departamento'],content['selectMunicipio'],content['correo'],content['fechaIngreso'],content['fechaRetiro'],content['telefono'],content['contrato'],content['dependencia'],content['direccion'],content['d_sesion']))
+        return 'true'
+    except UniqueViolation as e:
+        print(e)
+        #db.actualizarEducacionBasica((content['tituloBasica'],content['grado'],content['fechaGrado'],content['d_sesion']))
+        return 'true'
+    except Exception as e:
+        print(e)
+        return 'false'
+
+@app.route('/get_nombre_usuario', methods=['GET','POST'])
+def getNombreUsuario():
+    try:
+        content = request.values
+        nombre = db.getNombreUsuario(content['documento'])
+        if nombre:
+            nombreUsuario={
+                'nombre':nombre[0][0]
+            }
+            return nombreUsuario
+        else:
+            return 'false'
+    except Exception as e:
+        return 'false'
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

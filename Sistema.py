@@ -31,9 +31,12 @@ class Sistema(object):
         sql ="INSERT INTO LIBRETA_MILITAR (numero,tipo,codigo_distrito,documento_persona) values(%s,%s,%s,%s)"
         Conexion.sqlExecute(sql, datos)
 
-    def guardarInfoLibreta(self,datos,numero):
+    def actualizarInfoLibreta(self,datos,numero):
         print(datos)
-        sql = "UPDATE LIBRETA_MILITAR SET numero=%s,tipo=%s,codigo_distrito=%s ,documento=%s where numero ='"+numero+"'"
+        sql = "UPDATE LIBRETA_MILITAR SET numero=%s,tipo=%s,codigo_distrito=%s ,documento_persona=%s where numero ='"+numero+"'"
+        return Conexion.sqlExecute(sql, datos)
+    def guardarInfoLibreta(self,datos):
+        sql = "INSERT INTO LIBRETA_MILITAR (numero,tipo,codigo_distrito,documento_persona) VALUES(%s,%s,%s,%s)"
         return Conexion.sqlExecute(sql, datos)
 
     def guardarInfoNacionalidad(self,datos):
@@ -77,7 +80,7 @@ class Sistema(object):
         return Conexion.sqlGetData(sql)
 
     def obtenerLibreta(self, documento):
-        sql = "SELECT LIBRETA_MILITAR.numero, LIBRETA_MILITAR.tipo, LIBRETA_MILITAR.codigo_distrito FROM LIBRETA_MILITAR WHERE LIBRETA_MILITAR.documento ='"+documento+"'"
+        sql = "SELECT LIBRETA_MILITAR.numero, LIBRETA_MILITAR.tipo, LIBRETA_MILITAR.codigo_distrito FROM LIBRETA_MILITAR WHERE LIBRETA_MILITAR.documento_persona ='"+documento+"'"
         return Conexion.sqlGetData(sql)
     def obtenerDistritoMilitar(self, codigo_distrito):
         sql =" SELECT DISTRITO_MILITAR.nombre FROM DISTRITO_MILITAR WHERE DISTRITO_MILITAR.codigo ='"+codigo_distrito+"'"
@@ -104,3 +107,16 @@ class Sistema(object):
     def obtenerEmpleos(self, documento):
         sql = "SELECT EMPLEOS.nombre_empresa,EMPLEOS.gubernamental,EMPLEOS.codigo_pais,EMPLEOS.codigo_departamento,EMPLEOS.codigo_municipio,EMPLEOS.correo,EMPLEOS.fecha_ingreso,EMPLEOS.fecha_retiro,EMPLEOS.telefono,EMPLEOS.contrato,EMPLEOS.dependencia,EMPLEOS.direccion,EMPLEOS.documento FROM  EMPLEOS WHERE EMPLEOS.documento ='"+documento+"'"
         return Conexion.sqlGetData(sql)
+    def obtenerIdiomas(self, documento):
+        sql = "SELECT IDIOMAS.nombre, IDIOMAS.habla, IDIOMAS.lee, IDIOMAS.escribe FROM  IDIOMAS WHERE IDIOMAS.documento ='"+documento+"'"
+        return Conexion.sqlGetData(sql)
+
+    def guardarExperienciaLaboral(self,datos):
+        sql = "INSERT INTO EMPLEOS(nombre_empresa,gubernamental,codigo_pais,codigo_departamento,codigo_municipio,correo,fecha_ingreso,fecha_retiro,\
+        telefono,contrato,dependencia,direccion,documento) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+        return Conexion.sqlExecute(sql,datos)
+    def getNombreUsuario(self, documento):
+        sql ="SELECT PERSONA.nombre FROM PERSONA  WHERE PERSONA.documento = '"+documento+"'"
+        return Conexion.sqlGetData(sql)
+
+        
