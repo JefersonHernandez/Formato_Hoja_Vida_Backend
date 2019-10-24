@@ -19,20 +19,7 @@ def usuarioExiste(usuario):
         print('Exception usuarioExiste')
     finally:
         pass
-def esUsuarioValido(usuario,clave):
-    """retorna True si las credenciales del usuario coinciden con las registradas en la base de datos"""
-    try:
-        if db.login(usuario)[0][0] == clave:
-            return True
-        else:
-            raise UsuarioInvalido('Usuario Invalido')
-            #return False
-    except Exception as e:
-        print('Exception esUsuarioValido')
-    finally:
-        pass
 
-"""
 def esUsuarioValido(usuario,clave):
     """retorna True si las credenciales del usuario coinciden con las registradas en la base de datos"""
     try:
@@ -44,7 +31,6 @@ def esUsuarioValido(usuario,clave):
         print('Exception esUsuarioValido')
     finally:
         pass
-"""
 
 @app.route('/obtenerPaises', methods=['GET','POST'])
 def obtenerPaises():
@@ -128,7 +114,7 @@ def informacionPersonal():
         clave_sesion = content['c_sesion']
         if esUsuarioValido(usuario_sesion,clave_sesion):
             if content['check_libreta'] == 'true':
-                    datosLibreta = (content['numero_libreta'],content['clase_libreta'], content['distrito_militar'],usuario_sesion)
+                datosLibreta = (content['numero_libreta'],content['clase_libreta'], content['distrito_militar'],usuario_sesion)
                 try:
                     res = db.guardarInfoLibreta(datosLibreta)
                 except UniqueViolation as e:
